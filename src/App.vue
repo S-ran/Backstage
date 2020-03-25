@@ -1,28 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <router-view/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import jwt_decode from 'jwt-decode'  
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  created(){
+    if(localStorage.Token){
+       const decode = jwt_decode(localStorage.Token)
+       this.$store.dispatch('setAuthenticated',!this.isEmpty(decode))
+      this.$store.dispatch('setUser',decode)
+    }
+  },
+  methods:{
+               isEmpty(value){
+               return (
+                   value === undefined ||
+                   value === null ||
+                   (typeof value === 'object' && Object.keys(value).length === 0) ||
+                   (typeof value === 'string' && value.trim().length === 0)
+               )
+           }
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+#app{
+  width: 100%;
+  height:100%
 }
+
 </style>
